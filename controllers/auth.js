@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 
 const Usuario = require('../models/usuario');
 
-const { generarJWT } = require("../helpers/generarjwt");
+const { generarJWT } = require("../helpers/generar-jwt");
 const { googleVerify } = require("../helpers/google-verify");
 
 
@@ -57,12 +57,13 @@ const login = async(req, res = response) => {
 const googleSignin = async(req, res = response) => {
 
     const { id_token } = req.body;
-    
+    //console.log(id_token);
     try {
         const { correo, nombre, img } = await googleVerify( id_token );
-
+        //console.log(correo);
         let usuario = await Usuario.findOne({ correo });
 
+        //console.log(usuario);
         if ( !usuario ) {
             // Tengo que crearlo
             const data = {
@@ -72,7 +73,7 @@ const googleSignin = async(req, res = response) => {
                 img,
                 google: true
             };
-
+            
             usuario = new Usuario( data );
             await usuario.save();
         }
